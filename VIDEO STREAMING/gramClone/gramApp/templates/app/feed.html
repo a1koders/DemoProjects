@@ -1,0 +1,136 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+
+    <!--STORY-->
+  
+<div class="row">
+<section class="main">
+<div class="wrapper">
+ <!--main content-->
+ <div class="left-col">
+{% if images %}
+    {% for image in images %}
+        <div class="post">
+        <div class="info">
+            <div class="user">
+                <div class="profile-pic"><img src="{{ image.author.profile.image.url  }}" alt=""></div>
+                <a href="{% url 'profile' image.author.profile.pk %}" style="text-decoration: none">
+                <p class="username">{{image.author}}</p></a>
+            </div>
+        {% if request.user == image.author %}
+        <a href="{% url 'image-update' image.pk %}">
+            <img src="{% static 'assets/option.PNG' %}" class="options" alt="">
+        </a>
+        {% endif %}
+        </div>
+        
+        <a href="{% url 'postDetail' image.id %}">
+            <img src="{{image.image.url}}" class="post-image" alt="">
+        </a>
+        <div class="post-content">
+            <div class="reaction-wrapper">
+
+                <form method="POST" action="{% url 'like' image.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                   
+
+                    <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                        <img src="{% static 'assets/like.PNG' %}" class="icon" alt="" type="submit">
+                       
+                    </button>
+                </form>
+               
+                <img src="{% static 'assets/comment.PNG' %}" class="icon" alt="">
+                <img src="{% static 'assets/send.PNG' %}" class="icon" alt="">
+                <img src="{% static 'assets/save.PNG' %}" class="save icon" alt="">
+            </div>
+            
+            <p class="likes">{{ image.likes.all.count }} likes</p>
+            <p class="description"><span><a href="{% url 'profile' image.author.profile.pk %}" style="text-decoration: none; color:black"> {{image.author}} </a> </span> {{image.caption}}</p>
+            <small class="text-muted">{{image.uploadDate|timesince}}</small>
+            </br>
+            {% if comments  %}
+                <a href="{% url 'postDetail' image.id %}" style="text-decoration:none">
+                <small class="text-muted">View all comments</small>
+                </a>
+            {% else %}
+            {% endif %}
+            <br />
+            <a href="{% url 'postDetail' image.id %}" style="text-decoration:none">
+                <small class="text-muted"> Add Comment </small>
+                </a>
+            
+
+    </div>
+</div>
+{% endfor %}
+{% else %}
+{% endif %}
+
+</div>
+
+    <!--SIDEBAR-->
+    <div class="right-col">
+    <div class="col mt-4 pt-4">
+            <div class="profile-card">
+                <div class="profile-pic">
+                    <img src="{{ user.profile.image.url  }}" alt="">
+                </div>
+                <div>
+                    <p class="username"><a href="{% url 'profile' user.profile.pk %}" class="username" style="text-decoration: none;color:black">{{user.username}}</a></p>
+                    <p class="sub-text">
+                    {% if user.profile.first_name %}
+                        {{ user.profile.first_name }} 
+                    {% endif %}
+                    {% if user.profile.last_name %}
+                        {{ user.profile.last_name }}</p>
+                    {% endif %}
+                </div>
+                <button class="action-btn"><a href="{% url 'profile' user.profile.pk %}" style="text-decoration: none;">switch</a></button>
+            </div>
+            <p class="suggestion-text">Suggestions for you</p>
+            {% for suggestedProfile in suggestedProfiles %}
+            {% if request.user == suggestedProfile.user %}
+            {% else %}
+            <div class="profile-card">
+                <div class="profile-pic">
+                    <img src="{{suggestedProfile.image.url}}" alt="">
+                </div>
+                <div>
+                    <p class="username">{{suggestedProfile.user.username}}</p>
+                    <p class="sub-text"></p>
+                </div>
+                <button class="action-btn"><a href="{% url 'profile' suggestedProfile.pk  %}">Follow</a></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+            <div>
+            </br>
+
+                <small class="text-muted">
+                    <a href="https://about.instagram.com/" style="text-decoration: none; color: rgba(0, 0, 0, 0.496); font-size: 10px;">About </a>
+                    <a href="#" style="text-decoration: none; color: rgba(0, 0, 0, 0.496); font-size: 10px;">Help</a>
+                    <a href="#" style="text-decoration: none; color: rgba(0, 0, 0, 0.496); font-size: 10px;">Press</a>
+                    <a href="#" style="text-decoration: none; color: rgba(0, 0, 0, 0.496); font-size: 10px;">API</a>
+                    <a href="#" style="text-decoration: none; color: rgba(0, 0, 0, 0.496); font-size: 10px;">Jobs</a>
+                    <a href="#" style="text-decoration: none; color: rgba(0, 0, 0, 0.496); font-size: 10px;">Locations</a>
+                    </small>
+                </br>
+                <small class="text-muted" style="font-size: 11px;"> © 2022 INSTAGRAM FROM META </small>
+            </div>
+            
+            
+           
+        </div>
+    </div>
+
+   
+</div>
+</section>
+</div>
+</div>
+
+{% endblock content %}

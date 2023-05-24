@@ -1,0 +1,14 @@
+matplotlib
+seaborn
+pandas
+numpy
+pdf2image
+easyocr
+Pillow
+ipython
+streamlit
+xml-python
+opencv-python
+tensorflow==1.13.1
+keras==2.2.5
+Python==3.7.10

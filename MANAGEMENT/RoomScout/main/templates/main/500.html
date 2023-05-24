@@ -1,0 +1,16 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+
+{% block title %}
+    500 | Server Error
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>500 | Server Error</h2>
+        <div class="text-center">
+            <img class="img-fluid" src="{% static "error_images/BoatLeak-big.png" %}" width="500">
+        </div>
+    </div>
+
+{% endblock %}

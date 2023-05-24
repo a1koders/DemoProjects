@@ -1,0 +1,32 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    House Add Member
+{% endblock %}
+
+{% block content %}
+    {% if message %}
+        <div class="text-center bg-success">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="text-center bg-danger">
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+    <div class="container">
+        <h2>Invite member to {{ house.full_address }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ captcha }}
+            <label>Email</label>
+            <input class="form-control" name="email" type="email" placeholder="John@Appleseed.com">
+            <br>
+            <button class="btn btn-primary" type='submit'>Invite</button>
+        </form>
+    </div>
+
+{% endblock %}

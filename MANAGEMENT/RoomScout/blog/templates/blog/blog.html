@@ -1,0 +1,33 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+
+{% block title %}
+    Blog
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Blog</h2>
+        {% if blog_list %}
+            <div class="row">
+                {% for blog in blog_list %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            {% if blog.image %}
+                                <img class="card-img-top" src="{{ blog.image.url }}" alt="Image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ blog.title }}</h5>
+                                <p class="card-text">{{ blog.summary }}</p>
+                                <a href="{% url 'blog_post' blog.id %}" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>It looks like there are no posts right now, come back soon!</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

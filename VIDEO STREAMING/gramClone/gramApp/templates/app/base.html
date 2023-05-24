@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <!--CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'gram/main.css' %}">
+
+    {% if title %}
+        <title>Instagram Clone - {{ title }}</title>
+    {% else %}
+        <title>Instagram Clone</title>
+    {% endif %}
+
+</head>
+<body>
+    <!--NAVIGATION BAR-->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-wrapper" >
+              <img src="{% static 'assets/logo.PNG' %}" class="brand-img" alt="" href="{% url 'feed' %}">
+                
+              
+              <form class="navbar-form" role="search" action="{% url 'search' %}" class="search-box">
+                <div class="input-group">
+                  <input type="text"  placeholder="Search username..." name="search_user">                 
+                </div>
+                </form>
+                <div class="nav-items">
+                    <a href="{% url 'feed' %}" style="text-decoration:none;">
+                        <img src="{% static 'assets/home.PNG' %}" class="icon" alt="">
+                    </a>
+                    <img src="{% static 'assets/messenger.PNG' %}" class="icon" alt="">
+                    <a href="{% url 'image-create' %}" style="text-decoration: none;">
+                        <img src="{% static 'assets/add.PNG' %}" class="icon" alt="">
+                    </a>
+                    <a href="{% url 'explore' %}" style="text-decoration:none;">
+                    <img src="{% static 'assets/explore.PNG' %}" class="icon" alt="">
+                  </a>
+                    <img src="{% static 'assets/like.PNG' %}" class="icon" alt="">
+                    <a href="{% url 'profile' user.profile.pk %}" style="text-decoration: none">
+                        <div class="icon user-profile">
+                            <img src="{{ user.profile.image.url  }}" class="">
+                        </div>
+                    </a>
+                    <a href="/logout"><i style="margin-right: 20px;font-size: 20px;color: black">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                      </svg>
+                    </a>
+
+                </div>
+            </div>
+            </nav>
+        </header>
+<div class="container">
+
+   
+    
+          {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+          {% block content %} {% endblock %}
+        </div>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Find a Room
+{% endblock %}
+
+{% block content %}
+    {% if error %}
+        <div class="text-center bg-danger">
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    <div class="container">
+        <h2>Find a Room</h2>
+    {% if user.is_authenticated %}
+        <a href="{% url 'room_saved' %}">Saved Rooms</a>
+    {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-md-11">
+                    <input class="form-control" type="text" name="search" id="search" {% if search_term == '' %}placeholder="Search"{% else %}value="{{ search_term }}"{% endif %}>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" type='submit'>Search</button>
+                </div>
+            </div>
+            <br>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h6 class="mb-0">
+                                    <a data-toggle="collapse" href="#filtersCard">
+                                        Filters
+                                    </a>
+                                </h6>
+                            </div>
+
+                            <div id="filtersCard" class="collapse" data-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="container">
+                                        {% crispy filter_form %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        {% if rooms %}
+            <div class="row">
+                {% for room in rooms %}
+                    <div class="col-md-12">
+                        <div class="card mb-2 shadow-sm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <a href="{% url 'room_detail' room.pk %}"><h4 class="card-text">{{ room.name }}</h4></a>
+                                        <small>{{ room.house.full_address }}</small>
+                                        <br>
+                                        <strong>Price:</strong> ${{ room.price }}
+                                        <br>
+                                        {% if room.description != '' %}
+                                            <strong>Description:</strong>
+                                            <div class="container">
+                                                {{ room.description | linebreaks }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-6">
+                                        <h6>Posted: {{ room.get_time_difference_display }}</h6>
+                                        <img class="img-fluid" width="300" src="{{ room.get_first_image }}" alt="No Images">
+                                    </div>
+                                    {% if user.is_authenticated %}
+                                        <div class="col-1 text-center">
+                                            {% if room in saved_rooms %}
+                                                <img
+                                                    id="room_{{ room.pk }}"
+                                                    onclick="unlike({{ room.pk }})"
+                                                    class="img-fluid" width="25"
+                                                    alt="Liked"
+                                                    src="{% static 'icons/heart_filled.svg' %}"
+                                                />
+                                            {% else %}
+                                                <img
+                                                    id="room_{{ room.pk }}"
+                                                    onclick="like({{ room.pk }})"
+                                                    class="img-fluid" width="25"
+                                                    alt="Unliked"
+                                                    src="{% static 'icons/heart_empty.svg' %}"
+                                                />
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            </div>
+        {% else %}
+            <p>Looks like there are no available rooms that match your search!</p>
+            <p>Do you have a room you want to post?
+                <a href="{% url 'room_create' %}">Tell us about it</a></p>
+        {% endif %}
+
+    </div>
+    <script type="text/javascript">
+        function like(pk) {
+            const icon = document.getElementById("room_" + pk );
+            icon.src = "{% static 'icons/loading.svg' %}";
+            $.ajax({
+                url: `/room/${pk}/like/`,
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            })
+            .done(data => {
+                $( ".result" ).html( data );
+                icon.onclick = unlike.bind(null, pk);
+                icon.src = "{% static 'icons/heart_filled.svg' %}";
+            })
+            .fail(() => {
+                icon.src = "{% static 'icons/heart_empty.svg' %}";
+            });
+        }
+        function unlike(pk) {
+            const icon = document.getElementById("room_" + pk );
+            icon.src = "{% static 'icons/loading.svg' %}";
+            $.ajax({
+                url: `/room/${pk}/unlike/`,
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            })
+            .done(data => {
+                $( ".result" ).html( data );
+                icon.onclick = like.bind(null, pk);
+                icon.src = "{% static 'icons/heart_empty.svg' %}";
+            }).fail(() => {
+                icon.src = "{% static 'icons/heart_filled.svg' %}";
+            });
+        }
+    </script>
+{% endblock %}

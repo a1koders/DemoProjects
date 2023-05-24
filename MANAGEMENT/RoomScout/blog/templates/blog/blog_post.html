@@ -1,0 +1,21 @@
+{% extends 'main/_base.html' %}
+{% load static %}
+
+{% block title %}
+    Blog | {{ blog.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>{{ blog.title }}</h2>
+    </div>
+    {% if blog.image %}
+        <div class="container text-center">
+            <img src="{{ blog.image.url }}" width="300"/>
+        </div>
+    {% endif %}
+    <div class="container text-left">
+        <p>{{ blog.body }}</p>
+    </div>
+
+{% endblock %}
